@@ -17,7 +17,7 @@ repositories {
 val vertxVersion = "4.3.8"
 val junitJupiterVersion = "5.9.1"
 
-val mainVerticleName = "Dawit.learningvertx2.MainVerticle"
+val mainVerticleName = "Dawit.learningvertx2.verticles.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
 
 val watchForChange = "src/**/*"
@@ -47,6 +47,15 @@ tasks.withType<ShadowJar> {
   mergeServiceFiles()
 }
 
+tasks.withType<ShadowJar> {
+  archiveClassifier.set("fat")
+  manifest {
+    attributes(mapOf("MyFirstVerticle" to "Dawit.learningvertx2.verticles.MyFirstVerticle"))
+  }
+  mergeServiceFiles()
+}
+
+
 tasks.withType<Test> {
   useJUnitPlatform()
   testLogging {
@@ -56,4 +65,8 @@ tasks.withType<Test> {
 
 tasks.withType<JavaExec> {
   args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
+}
+
+tasks.withType<JavaExec> {
+  args = listOf("run", "Dawit.learningvertx2.verticles.MyFirstVerticle", "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }

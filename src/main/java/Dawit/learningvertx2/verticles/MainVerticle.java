@@ -1,4 +1,4 @@
-package Dawit.learningvertx2;
+package Dawit.learningvertx2.verticles;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
