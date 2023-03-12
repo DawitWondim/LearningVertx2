@@ -1,11 +1,26 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
+import org.gradle.internal.impldep.org.eclipse.jgit.lib.ObjectChecker.type
+
+fun task() {
+
+}
+
+
 
 plugins {
   java
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
+  id("org.gretty") version "3.0.5"
 }
+
+gretty {
+  httpPort = 5050 // set the port number here
+  contextPath = "/" // set the context path if necessary
+  servletContainer = "jetty9" // use Jetty as the web server
+}
+
 
 group = "Dawit"
 version = "1.0.0-SNAPSHOT"
@@ -32,6 +47,7 @@ dependencies {
   implementation("io.vertx:vertx-web")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  implementation("javax.servlet:javax.servlet-api:4.0.1")
 }
 
 java {
@@ -55,6 +71,14 @@ tasks.withType<ShadowJar> {
   mergeServiceFiles()
 }
 
+tasks.withType<ShadowJar> {
+  archiveClassifier.set("fat")
+  manifest {
+    attributes(mapOf("FormVerticle" to "Dawit.learningvertx2.verticles.FormVerticle"))
+  }
+  mergeServiceFiles()
+}
+
 
 tasks.withType<Test> {
   useJUnitPlatform()
@@ -70,3 +94,10 @@ tasks.withType<JavaExec> {
 tasks.withType<JavaExec> {
   args = listOf("run", "Dawit.learningvertx2.verticles.MyFirstVerticle", "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }
+
+tasks.withType<JavaExec> {
+  args = listOf("run", "Dawit.learningvertx2.verticles.FormVerticle", "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
+}
+
+
+
